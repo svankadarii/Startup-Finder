@@ -1,0 +1,41 @@
+# Claude Code local settings
+.claude/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+.env/
+venv/
+.venv/
+env/
+
+# Secrets — copy backend/.env.example → backend/.env and fill in your keys
+backend/.env
+
+# Runtime logs
+*.log
+
+# Scraped data (generated at runtime, may contain personal data)
+data/startups.json
+data/analyzed_startups.json
+data/saved_startups.json
+
+# React / Node
+frontend/node_modules/
+frontend/build/
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
