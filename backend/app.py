@@ -11,7 +11,6 @@ load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 from data_manager import DataManager
 from claude_api import ClaudeAPI
 from scrapers.yc_scraper import YCScraper
-from scrapers.hn_scraper import HNScraper
 from scrapers.product_hunt_scraper import ProductHuntScraper
 from scrapers.linkedin_scraper import LinkedInScraper, reset_lookup_count
 from scrapers.crunchbase_scraper import CrunchbaseScraper
@@ -58,25 +57,17 @@ def _run_scrapers():
             print(f"[YC scraper error] {e}")
             update(message=f"YC error ({e}). Continuing...")
 
-        # 2. Hacker News Show HN (free Algolia API) -----------------------
-        update(message="Scraping Hacker News launches...", progress=25)
-        try:
-            hn_results = HNScraper().scrape()
-            all_startups.extend(hn_results)
-            update(message=f"HN: {len(hn_results)} launches found.", progress=40)
-        except Exception as e:
-            print(f"[HN scraper error] {e}")
-            update(message=f"HN error ({e}). Continuing...")
-
-        # 3. Product Hunt (requires PH_API_TOKEN in .env) -----------------
+        # 2. Product Hunt (requires PH_API_TOKEN in .env) -----------------
+        update(message="Scraping Product Hunt launches...", progress=25)
         try:
             ph_results = ProductHuntScraper().scrape()
             all_startups.extend(ph_results)
-            update(message=f"Product Hunt: {len(ph_results)} launches found.", progress=55)
+            update(message=f"Product Hunt: {len(ph_results)} launches found.", progress=45)
         except Exception as e:
             print(f"[PH scraper error] {e}")
+            update(message=f"Product Hunt error ({e}). Continuing...")
 
-        # 4. Crunchbase (requires CRUNCHBASE_API_KEY in .env) -------------
+        # 3. Crunchbase (requires CRUNCHBASE_API_KEY in .env) -------------
         try:
             cb_results = CrunchbaseScraper().scrape()
             all_startups.extend(cb_results)

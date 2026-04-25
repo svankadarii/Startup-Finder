@@ -88,11 +88,23 @@ class DataManager:
     def get_stats(self):
         data = _load(STARTUPS_FILE, {"startups": [], "last_scrape": None})
         startups = data.get("startups", [])
+
+        early_stages = {"pre-seed", "seed", "angel", "grant"}
+        known_stages = {"series a", "series b", "series c", "series d+", "venture"}
+
+        def stage_bucket(s):
+            stage = (s.get("funding_stage") or "").lower().strip()
+            if stage in early_stages:
+                return "early"
+            if stage in known_stages:
+                return "known"
+            return "hidden_gem"
+
         return {
             "total_startups": len(startups),
-            "hidden_gems_count": sum(1 for s in startups if s.get("follower_range") == "hidden_gem"),
-            "early_stage_count": sum(1 for s in startups if s.get("follower_range") == "early"),
-            "known_startups_count": sum(1 for s in startups if s.get("follower_range") == "known"),
+            "hidden_gems_count": sum(1 for s in startups if stage_bucket(s) == "hidden_gem"),
+            "early_stage_count": sum(1 for s in startups if stage_bucket(s) == "early"),
+            "known_startups_count": sum(1 for s in startups if stage_bucket(s) == "known"),
             "last_scrape_time": data.get("last_scrape"),
         }
 
